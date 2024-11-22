@@ -1,0 +1,18 @@
+dist: xenial
+language: python
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9"
+  - "3.10-dev"
+  - "nightly"
+before_install:
+  - sudo apt-get install python-dev libgmp3-dev
+install:
+  - pip install pycodestyle pytest pytest-cov==2.9.0
+before_script:
+  - pycodestyle --max-line-length=200 --ignore=E402,W605 */*.py
+  - pip install -e .
+script:
+  - pytest --cov=fastecdsa
