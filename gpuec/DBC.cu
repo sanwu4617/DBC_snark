@@ -9,7 +9,8 @@
 #define DBC_COEF 10      //次优DBC参数设置，本参数越小计算DBC越快，但DBC质量越好。不过参数过小可能会引起bug，建议不要小于10
 int bBound[MAX_2] = { 0 };
 //extern int MAX_T;
-int DBC_store[DBC_COEF][MAX_2][3]={0};   //第1维：不同的DBC，第2维：一个DBC的不同项，第3维：符号，2的次数，3的次数
+// int DBC_store[DBC_COEF][MAX_2][3]={0};   //第1维：不同的DBC，第2维：一个DBC的不同项，第3维：符号，2的次数，3的次数
+int DBC_store[1][MAX_2][3]={0}; 
 int DBC_len[MAX_2]={0};
 
 // __host__ __device__ Chain::Chain() {
@@ -780,21 +781,21 @@ __host__ __device__ int DBCv2::getDBC(uint288 *n) {
 			}
 			DBC_len[DBC_index]=i;
 			DBC_index++;
-			
+			break;
 		}
 		
 	}
-	int V=9999999;
-	int min_index=-1;
-	for(int i=0;i<DBC_index;i++)
-	{
-		int temp=DBC_len[i]*150+DBC_store[i][0][1]*70+DBC_store[i][0][2]*126;
-		if(temp<V)
-		{
-			V=temp;
-			min_index=i;
-		}
-	}
+	// int V=9999999;
+	// int min_index=-1;
+	// for(int i=0;i<DBC_index;i++)
+	// {
+	// 	int temp=DBC_len[i]*150+DBC_store[i][0][1]*70+DBC_store[i][0][2]*126;
+	// 	if(temp<V)
+	// 	{
+	// 		V=temp;
+	// 		min_index=i;
+	// 	}
+	// }
 
-	return min_index;
+	return 0;//min_index;
 }

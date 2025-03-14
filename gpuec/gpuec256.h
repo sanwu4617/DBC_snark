@@ -69,7 +69,7 @@ typedef struct initParamRandom{
 
 #define DBC_COEF 10 //次优DBC参数设置，本参数越小计算DBC越快，但DBC质量越好。不过参数过小可能会引起bug，建议不要小于10
 
-#define DBC_MAXLENGTH 200
+#define DBC_MAXLENGTH 100
 
 __constant__ static int b_try[130] = {
 		72, 71, 73, 74, 70, 69, 75, 68, 76, 67,

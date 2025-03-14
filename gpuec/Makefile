@@ -1,10 +1,10 @@
 NVCC = nvcc
-ARCHFLAG = -arch=sm_35
+ARCHFLAG = -arch=sm_70
 RP_LIB_FLAG = -std=c++11 -lcrypto -lgmp -lm
 DBC_FLAG = -std=c++11 -lm
 
-p256:gpuec256.o test256.cu
-	$(NVCC) $(ARCHFLAG) -std=c++11 -rdc=true test256.cu gpuec256.o -o test256
+p256:uint288.o constants.o gpuec256.o test256.cu
+	$(NVCC) $(ARCHFLAG) -std=c++11 -rdc=true test256.cu uint288.o constants.o gpuec256.o -o test256
 
 p512:
 	$(NVCC) $(ARCHFLAG) -dc  gpuec.cu -o gpuec.o
@@ -16,8 +16,8 @@ gmp:
 rp:rp.cu gpuec256.o
 	$(NVCC) $(ARCHFLAG) rp.cu gpuec256.o -rdc=true $(RP_LIB_FLAG) -o rp
 
-cuv:cuverify.cu gpuec256.o
-	$(NVCC) $(ARCHFLAG) cuverify.cu gpuec256.o -rdc=true $(RP_LIB_FLAG) -o cuv
+# cuv:cuverify.cu gpuec256.o
+# 	$(NVCC) $(ARCHFLAG) cuverify.cu gpuec256.o -rdc=true $(RP_LIB_FLAG) -o cuv
 
 Test256: gpuec256.o test256.cu
 	$(NVCC) $(ARCHFLAG) test256.cu gpuec256.o -rdc=true $(DBC_FLAG) -o test256
@@ -34,11 +34,11 @@ uint288.o:uint288.cu uint288.h
 constants.o:constants.cu constants.cuh uint288.h
 	$(NVCC) $(ARCHFLAG)  -dc  constants.cu -o constants.o
 
-gpuec256.o:gpuec256.cu gpuec256.h
-	$(NVCC) $(ARCHFLAG)  -dc  gpuec256.cu -o gpuec256.o
+gpuec256.o:gpuec256.cu gpuec256.h constants.cuh uint288.h
+	$(NVCC) $(ARCHFLAG)  -dc  gpuec256.cu -o gpuec256.o 
 
-curveTest:gpuec256.o uint288.o constants.o
-	$(NVCC) $(ARCHFLAG) curveTest.cu gpuec256.o uint288.o constants.o  -rdc=true $(DBC_FLAG) -o curveTest
+curveTest:gpuec256.o uint288.o constants.o curveTest.cu
+	$(NVCC) $(ARCHFLAG) curveTest.cu gpuec256.o uint288.o constants.o -rdc=true $(DBC_FLAG) -o curveTest
 
 cleanTest:
 	rm curveTest
