@@ -38,33 +38,6 @@ extern const __device__ uint288 u_pow23[][MAX_3];
 	  exit( EXIT_FAILURE ); }  \
 }
 
-//?��?512??????????????????????256????��
-//??��?????????????????????????
-//h_ONE??host????????1
-//dc_ONE??gpu??????????1
-//h_mon_ONE??dc_mon_ONE?????????host??gpu???????????????????1
-//h_p??dc_p??512????????
-//Pa0??Pa7???????????????????
-
-// const UINT64 h_ONE[8]={0x0000000000000001L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L};
-// const UINT64 h_mon_ONE[8]={0x0000000000000001L,0x0000000100000000L,0x0000000000000000L,0x0000000100000000L,0x0000000000000000L,0x0000000000000001L,0x0000000100000000L,0x0000000000000000L};
-// const UINT64 h_p[8]={0xFFFFFFFEFFFFFC2FL,0xFFFFFFFFFFFFFFFFL,0xFFFFFFFFFFFFFFFFL,0xFFFFFFFFFFFFFFFFL,0x0L,0x0L,0x0L,0x0L};
-
-// __constant__ UINT64 dc_ONE[8]={0x0000000000000001L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L};
-// __constant__ UINT64 dc_mon_ONE[8]={0x0000000000000001L,0x0000000100000000L,0x0000000000000000L,0x0000000100000000L,0x0000000000000000L,0x0000000000000001L,0x0000000100000000L,0x0000000000000000L};
-// __constant__ UINT64 dc_p[8]={0xFFFFFFFEFFFFFC2FL,0xFFFFFFFFFFFFFFFFL,0xFFFFFFFFFFFFFFFFL,0xFFFFFFFFFFFFFFFFL,0x0L,0x0L,0x0L,0x0L};
-
-
-// const UINT64 h_ONE[4]={0x0000000000000001L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L};
-// const UINT64 h_mon_ONE[4]={0x1000003d1L,0x0L,0x0L,0x0L};
-// const UINT64 h_p[4]={0xFFFFFFFEFFFFFC2FL,0xFFFFFFFFFFFFFFFFL,0xFFFFFFFFFFFFFFFFL,0xFFFFFFFFFFFFFFFFL};
-
-// __constant__ UINT64 dc_ONE[4]={0x0000000000000001L,0x0000000000000000L,0x0000000000000000L,0x0000000000000000L};
-// __constant__ UINT64 dc_mon_ONE[4]={0x1000003d1L,0x0L,0x0L,0x0L};
-// __constant__ UINT64 dc_p[4]={0xFFFFFFFEFFFFFC2FL,0xFFFFFFFFFFFFFFFFL,0xFFFFFFFFFFFFFFFFL,0xFFFFFFFFFFFFFFFFL};
-
-//__constant__ UINT64 dc_mon_inv_two[4]={0x0L,0x0L,0x0L,0x8000000000000000L};
-//const UINT64 h_mon_inv_two[4]={0x0L,0x0L,0x0L,0x8000000000000000L};
 
 #define Pa0 0xFFFFFFFEFFFFFC2FLL //-1
 #define Pa1 0xFFFFFFFFFFFFFFFFLL 
@@ -2325,56 +2298,6 @@ __device__ __host__ void dh_my_point_copy(Jpoint* from, Jpoint* to) {
     dh_mybig_copy(to->y, from->y);
     dh_mybig_copy(to->x, from->z);
 }
-
-/**
- * run_DBC:
- * use n (represented by DBC) calculate res = n * point, the (*) calculator means scalar multiple.
- *
- * @param dbc double-base chain's pointer.
- * @param point jacobian-montgomery base point.
- * @param res jacobian-montogomery result point. res can't be point.
- */
-// __device__ __host__ void run_DBC(DBCv2* dbc, Jpoint* point, Jpoint* res) {
-// #ifdef __CUDA_ARCH__
-//     const UINT64 *Pa=dc_p;
-// #else
-//     const UINT64 *Pa=h_p;
-// #endif
-
-//     Jpoint base, wtf;
-//     dh_my_point_copy(point, &base);
-//     //dh_my_point_copy(point, &wtf);
-//     int now_dbl = 0, now_tpl = 0;
-//     if (dbc && dbc->length) {
-//         for (int i = 0; i < dbc->length; i++) {
-//             while (1) {
-//                 if (now_dbl < dbc->data[i].dbl) {
-//                     ppoint_double(&base, &wtf);
-//                     dh_my_point_copy(&wtf, &base);
-//                     now_dbl++;
-//                 } else if (now_tpl < dbc->data[i].tpl) {
-//                     ppoint_triple(&base, &wtf);
-//                     dh_my_point_copy(&wtf, &base);
-//                     now_tpl++;
-//                 } else
-//                     break;
-//             } //here wtf = base = new dbl value.
-
-//             if (dbc->data[i].minus) {
-//                 // this actually goes for P - a*R, not P - a. but in montgomery field,
-//                 // we actually want (P - a) * R, while (P - a)*R === P - a*R mod P.
-//                 dh_mybig_sub_64(Pa, base.y, wtf.y);
-//             }
-//             if (i) { // i > 0
-//                 dh_ellipticAdd_JJ(res, &wtf, res);
-//             } else { // i == 0, just copy the first value.
-//                 dh_my_point_copy(res, &wtf);
-//             }
-//         }
-//     } else {
-//         // dbc is null or dbc.length == 0. Now just do nothing.
-//     }
-// }
 
 /**
  * run_DBC_v2:
