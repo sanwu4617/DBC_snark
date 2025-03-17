@@ -7,7 +7,7 @@
 #include "cuda_common.h"
 using namespace std;
 
-#define CONST_SCALE 20
+#define CONST_SCALE 13
 const int N_BIGNUM = 1 << CONST_SCALE;  // maxsize = 2^20, for not run out of memory.
 const int BATCHSIZE = 1 << CONST_SCALE; //
 const int N_POINT = BATCHSIZE;
@@ -62,7 +62,15 @@ void make_uint288(uint288 *out, uint *in, int len)
             for (int k = 0; k < 8; k++, rand++)
             {
                 // ATTENTION!! UINT288 is big-endian, so least significant is data[8].
+
+                // 1.稠密数据
                 out[i * 9 + j].data[k + 1] = in[j * 8 + k] + rand;
+
+                // 2.稀疏数据
+                if (i%101 != 7)
+                {
+                    out[i * 9 + j].data[k + 1] = 0;
+                }
             }
             out[i * 9 + j].data[0] = 0;
         }
